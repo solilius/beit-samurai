@@ -1,0 +1,16 @@
+{
+  "name": "beit-samurai",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "epxress": "^0.0.1-security",
+    "express": "^4.19.2",
+    "googleapis": "^144.0.0"
+  }
+}
