@@ -1,18 +1,16 @@
 import { google } from 'googleapis';
 import { config } from '../config';
-import { JWT } from 'google-auth-library';
 
 const sheets = google.sheets('v4');
 
-let auth: JWT;
+const auth = new google.auth.JWT(
+    config.serviceAccountEmail,
+    undefined,
+    config.serviceAccountPrivateKey,
+    ['https://www.googleapis.com/auth/spreadsheets.readonly']
+);
 
 export async function authorize() {
-    auth = new google.auth.JWT(
-        config.serviceAccountEmail,
-        undefined,
-        config.serviceAccountPrivateKey,
-        ['https://www.googleapis.com/auth/spreadsheets.readonly']
-    );
     auth.authorize();
 }
 
