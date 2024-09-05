@@ -4,7 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node dist/src/index.js"
+    "build": "tsc && npm run copy-public",
+    "copy-public": "copyfiles -u 1 \"public/**/*\" dist/public",
+    "start": "npm run build && node dist/src/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -17,6 +19,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.5.4",
+    "copyfiles": "^2.4.1",
     "typescript": "^5.5.4"
   }
 }
