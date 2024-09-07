@@ -11,7 +11,7 @@ const auth = new google.auth.JWT(
 );
 
 export async function authorize() {
-    auth.authorize();
+    await auth.authorize();
 }
 
 export async function getSheetNames(): Promise<string[]> {

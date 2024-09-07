@@ -7,7 +7,8 @@
     "build": "tsc && cd client && npm run build",
     "start": "npm run build && node dist/src/index.js",
     "client": "cd client && npm start",
-    "dev": "concurrently \"npm run client\" \"nodemon dist/src/index.js\""
+    "dev": "concurrently \"npm run client\" \"nodemon dist/src/index.js\"",
+    "serve": "concurrently \"npm run client\" \"node dist/src/index.js\""
   },
   "author": "",
   "license": "ISC",
