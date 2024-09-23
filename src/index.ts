@@ -1,25 +1,23 @@
 import express, { Request, Response } from 'express';
-import path from 'path';
+import cors from 'cors';
 import { getAvailableBeds } from './flows/get-available-beds';
 import { config } from './config';
 
 const app = express();
 const PORT = config.port;
 
+app.use(cors());
+
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, '../../client/build')));
-
+// API route to get available beds
 app.get('/available-beds', async (req: Request, res: Response) => {
-  const months = (req.query.months as string).split(',');
-  const bookings = await getAvailableBeds(months);
-  res.json(bookings);
+  const weeks = req.query.weeks.split(',');
+  const bookings = await getAvailableBeds(weeks);
+  res.send(bookings);
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../client/build', 'index.html'));
-});
-
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
