@@ -5,17 +5,17 @@ import { authorize, getBookingSpreadsheet, getSheetNames } from "../api/google-a
 
 const WEEK_LENGTH = 7;
 
-export async function getAvailableBeds(weeks: string[]): Promise<{ [key: string]: number }> {
+type WeeklyBooking = { [key: string]: number };
+type Booking = { [key: string]: WeeklyBooking };
+
+export async function getAvailableBeds(weeks: string[]): Promise<Booking> {
     try {
         await authorize();
-        // const sheetNames = await getSheetNames();
-        // const filterSheetNames = getRelevantSheetNames(sheetNames, month);
-        const formattedWeeks = weeks.map(w => formatWeek(w));
-        let bookings: { [key: string]: number } = {};
+        const bookings: Booking = {};
 
-        for (const sheetName of formattedWeeks) {
+        for (const sheetName of weeks) {
             const weeklyBookings = await getWeeklyBookings(sheetName);
-            bookings = { ...bookings, ...weeklyBookings };
+            bookings[sheetName] = weeklyBookings;
         }
 
         return bookings;
@@ -25,7 +25,9 @@ export async function getAvailableBeds(weeks: string[]): Promise<{ [key: string]
     }
 }
 
-async function getWeeklyBookings(sheetName: string): Promise<{ [key: string]: number }> {
+async function getWeeklyBookings(week: string): Promise<{ [key: string]: number }> {
+    const sheetName = formatWeek(week);
+
     const [dates, _weekDays, ...bookings] = await getBookingSpreadsheet(sheetName);
     const weeklyBookings: { [key: string]: number } = {};
 
@@ -42,11 +44,6 @@ async function getWeeklyBookings(sheetName: string): Promise<{ [key: string]: nu
     }
     return weeklyBookings;
 }
-
-// function getRelevantSheetNames(sheetNames: string[], date: string): string[] {
-//     const [year, month] = date.split('-');
-//     return sheetNames.filter(s => s.includes(`[${year}] ${month}`));
-// }
 
 function formatWeek(week: string) {
     const date = moment(week, "DD-MM-YYYY");
