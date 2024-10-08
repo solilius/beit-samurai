@@ -43,12 +43,9 @@ async function getWeeklyBookings(week: string): Promise<WeeklyBooking> {
 }
 
 function parseToSheetName(week: string) {
-    const date = moment(week, "DD-MM-YYYY");
-    const yearSuffix = date.format("YY");
-    const month = date.format("MMM");
-    const day = date.format("D");
-    
-    return `[${yearSuffix}] ${month} ${day}`;
+    const date = moment(week, 'DD/MM/YYYY');
+    const yearSuffix = date.format('YY');
+    return  `[${yearSuffix}] ${date.format('MMM D')}`;
 };
 
 function formatDate(dateString: Moment, year: string): string {
