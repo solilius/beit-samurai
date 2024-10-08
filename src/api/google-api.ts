@@ -24,11 +24,15 @@ export async function getSheetNames(): Promise<string[]> {
 }
 
 export async function getBookingSpreadsheet(sheetName: string) {
-    const response = await sheets.spreadsheets.values.get({
-        auth,
-        spreadsheetId: config.spreadsheetId,
-        range: `'${sheetName}'!C3:Z15`,
-    });
+    try {
+        const response = await sheets.spreadsheets.values.get({
+            auth,
+            spreadsheetId: config.spreadsheetId,
+            range: `'${sheetName}'!C3:Z15`,
+        });
 
-    return response.data.values || [];
+        return response.data.values
+    } catch (error) {
+        return [];
+    }
 }

@@ -1,35 +1,31 @@
-import moment from 'moment';
+import moment, { Moment } from 'moment';
 
 import { config } from "../config";
-import { authorize, getBookingSpreadsheet, getSheetNames } from "../api/google-api";
+import { authorize, getBookingSpreadsheet } from "../api/google-api";
 
 const WEEK_LENGTH = 7;
 
 type WeeklyBooking = { [key: string]: number };
-type Booking = { [key: string]: WeeklyBooking };
 
-export async function getAvailableBeds(weeks: string[]): Promise<Booking> {
+export async function getAvailableBeds(week: string): Promise<WeeklyBooking> {
     try {
         await authorize();
-        const bookings: Booking = {};
-
-        for (const sheetName of weeks) {
-            const weeklyBookings = await getWeeklyBookings(sheetName);
-            bookings[sheetName] = weeklyBookings;
-        }
-
-        return bookings;
+        const weeklyBookings = await getWeeklyBookings(week);
+        return weeklyBookings;
     } catch (error) {
         console.error('Error reading the spreadsheet:', error);
         return {};
     }
 }
 
-async function getWeeklyBookings(week: string): Promise<{ [key: string]: number }> {
-    const sheetName = formatWeek(week);
+async function getWeeklyBookings(week: string): Promise<WeeklyBooking> {
+    const sheetName = parseToSheetName(week);
 
     const [dates, _weekDays, ...bookings] = await getBookingSpreadsheet(sheetName);
-    const weeklyBookings: { [key: string]: number } = {};
+
+    if (!dates) return getEmptyWeekBooking(week);
+    
+    const weeklyBookings: WeeklyBooking = {};
 
     for (let i = 0; i < WEEK_LENGTH; i++) {
         let bookingsCounter = 0;
@@ -40,12 +36,13 @@ async function getWeeklyBookings(week: string): Promise<{ [key: string]: number 
             }
         }
         const year = sheetName.match(/\[(\d+)\]/)?.[1];
-        weeklyBookings[formatDate(dates[i], year)] = calcAvailableBeds(bookingsCounter);
+        weeklyBookings[formatDate(moment(dates[i], 'MM/DD'), year)] = calcAvailableBeds(bookingsCounter);
     }
+
     return weeklyBookings;
 }
 
-function formatWeek(week: string) {
+function parseToSheetName(week: string) {
     const date = moment(week, "DD-MM-YYYY");
     const yearSuffix = date.format("YY");
     const month = date.format("MMM");
@@ -54,13 +51,23 @@ function formatWeek(week: string) {
     return `[${yearSuffix}] ${month} ${day}`;
 };
 
-function formatDate(dateString: string, year: string): string {
-    const addZero = (num: number) => (num < 10 ? '0' + num : num.toString());
-    const [month, day] = dateString.split('/');
-
-    return `${addZero(Number(day))}/${addZero(Number(month))}/${year}`;
+function formatDate(dateString: Moment, year: string): string {
+    return `${dateString.format('DD/MM')}/${year}`;
 }
 
 function calcAvailableBeds(booked: number): number {
     return Math.max(0, config.maxBedCapacity - booked);
+}
+
+function getEmptyWeekBooking(week: string) : WeeklyBooking {
+    const weekData: Record<string, number> = {};
+    const sunday = moment(week, 'DD-MM-YY');
+  
+    for (let i = 0; i < 7; i++) {
+      const currentDate = sunday.clone().add(i, 'days');
+      const formattedDate = formatDate(currentDate, currentDate.format('YY'));
+      weekData[formattedDate] = calcAvailableBeds(0);
+    }
+  
+    return weekData;
 }
