@@ -48,7 +48,7 @@ function parseToSheetName(week: string) {
     return  `[${yearSuffix}] ${date.format('MMM D')}`;
 };
 
-function formatDate(dateString: Moment, year: string): string {
+function formatDate(dateString: Moment, year?:string): string {
     return `${dateString.format('DD/MM')}/${year}`;
 }
 

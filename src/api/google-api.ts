@@ -23,7 +23,7 @@ export async function getSheetNames(): Promise<string[]> {
     return response.data.sheets?.map(sheet => sheet.properties?.title || '') ?? [];
 }
 
-export async function getBookingSpreadsheet(sheetName: string) {
+export async function getBookingSpreadsheet(sheetName: string): Promise<string[][]> {
     try {
         const response = await sheets.spreadsheets.values.get({
             auth,
@@ -31,7 +31,7 @@ export async function getBookingSpreadsheet(sheetName: string) {
             range: `'${sheetName}'!C3:Z15`,
         });
 
-        return response.data.values
+        return response.data.values as string[][];
     } catch (error) {
         return [];
     }
