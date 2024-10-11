@@ -1,6 +1,8 @@
 import { google } from 'googleapis';
 import { config } from '../config';
 
+let authTimestamp: Date;
+
 const sheets = google.sheets('v4');
 
 const auth = new google.auth.JWT(
@@ -11,7 +13,10 @@ const auth = new google.auth.JWT(
 );
 
 export async function authorize() {
-    await auth.authorize();
+    if (Date.now() < authTimestamp.getTime()) {
+        await auth.authorize();
+        authTimestamp = new Date();
+    }
 }
 
 export async function getSheetNames(): Promise<string[]> {

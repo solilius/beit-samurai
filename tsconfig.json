@@ -6,7 +6,8 @@
     "strict": true,
     "outDir": "./dist",
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "sourceMap": true,                                /* Create source map files for emitted JavaScript files. */
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]
