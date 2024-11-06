@@ -1,7 +1,9 @@
 import { google } from 'googleapis';
 import { config } from '../config';
 
-let authTimestamp: Date;
+const GOOGLE_TOKEN_TTL = 3600 * 1000;
+
+let authTimestamp: number;
 
 const sheets = google.sheets('v4');
 
@@ -13,9 +15,10 @@ const auth = new google.auth.JWT(
 );
 
 export async function authorize() {
-    if (Date.now() < authTimestamp.getTime()) {
+    const now = Date.now();
+    if (!authTimestamp || now - authTimestamp >= GOOGLE_TOKEN_TTL) {
         await auth.authorize();
-        authTimestamp = new Date();
+        authTimestamp = now;
     }
 }
 
