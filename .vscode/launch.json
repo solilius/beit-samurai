@@ -6,7 +6,7 @@
             "request": "launch",
             "name": "Start",
             "runtimeExecutable": "npm",
-            "runtimeArgs": ["run", "start"],
+            "runtimeArgs": ["run", "dev"],
             "cwd": "${workspaceFolder}",
             "console": "integratedTerminal"
           }

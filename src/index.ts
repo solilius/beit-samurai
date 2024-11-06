@@ -15,9 +15,6 @@ app.use(express.json());
 // EXAMPLE  http://localhost:3005/available-beds/15-09-2024
 app.get('/available-beds/:week', async (req: Request, res: Response) => {
   const week = req.params.week;
-
-  console.log(`GET: available-beds ${week}`);
-
   if (!config.isProd && bookingJson[week]) {
     res.send(bookingJson[week]);
     return;
