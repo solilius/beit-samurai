@@ -24,7 +24,7 @@ app.get('/available-beds/:week', async (req: Request, res: Response) => {
   res.send(bookings);
 });
 
-app.get('/alive', async (req, res) => {
+app.put('/alive', async (req, res) => {
   res.send();
 });
 

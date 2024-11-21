@@ -31,7 +31,7 @@ app.get('/available-beds/:week', (req, res) => __awaiter(void 0, void 0, void 0,
     const bookings = yield (0, get_available_beds_1.getAvailableBeds)(req.params.week);
     res.send(bookings);
 }));
-app.get('/alive', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.put('/alive', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send();
 }));
 // Start the server
