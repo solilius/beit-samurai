@@ -15,13 +15,17 @@ app.use(express.json());
 // EXAMPLE  http://localhost:3005/available-beds/15-09-2024
 app.get('/available-beds/:week', async (req: Request, res: Response) => {
   const week = req.params.week;
-  if (!config.isProd && bookingJson[week]) {
-    res.send(bookingJson[week]);
-    return;
-  }
+  // if (!config.isProd && bookingJson[week]) {
+  //   res.send(bookingJson[week]);
+  //   return;
+  // }
 
   const bookings = await getAvailableBeds(req.params.week);
   res.send(bookings);
+});
+
+app.get('/alive', async (req, res) => {
+  res.send();
 });
 
 // Start the server

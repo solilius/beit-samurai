@@ -16,7 +16,6 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const get_available_beds_1 = require("./flows/get-available-beds");
 const config_1 = require("./config");
-const mock_data_1 = require("./mock-data");
 const app = (0, express_1.default)();
 const PORT = config_1.config.port;
 app.use((0, cors_1.default)());
@@ -25,12 +24,15 @@ app.use(express_1.default.json());
 // EXAMPLE  http://localhost:3005/available-beds/15-09-2024
 app.get('/available-beds/:week', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const week = req.params.week;
-    if (!config_1.config.isProd && mock_data_1.bookingJson[week]) {
-        res.send(mock_data_1.bookingJson[week]);
-        return;
-    }
+    // if (!config.isProd && bookingJson[week]) {
+    //   res.send(bookingJson[week]);
+    //   return;
+    // }
     const bookings = yield (0, get_available_beds_1.getAvailableBeds)(req.params.week);
     res.send(bookings);
+}));
+app.get('/alive', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    res.send();
 }));
 // Start the server
 app.listen(PORT, () => {

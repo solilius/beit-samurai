@@ -23,6 +23,11 @@ app.get('/available-beds/:week', async (req, res) => {
     const bookings = await (0, get_available_beds_1.getAvailableBeds)(req.params.week);
     res.send(bookings);
 });
+
+app.get('/alive', async (req, res) => {
+    res.send();
+});
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
