@@ -43,13 +43,18 @@ function getBookingSpreadsheet(sheetName) {
             const response = yield sheets.spreadsheets.values.get({
                 auth,
                 spreadsheetId: config_1.config.spreadsheetId,
-                range: `'${sheetName}'!C3:Z15`,
+                range: `'${sheetName}'!C3:Z17`,
             });
-            return response.data.values;
+            return filterRows(response.data.values);
         }
         catch (error) {
-            return [];
+            return { dates: [], bookings: [] };
         }
     });
+}
+function filterRows(rows) {
+    const [dates, _weekDays, ...bookings] = rows;
+    const filteredRows = bookings.filter((_, index) => index !== 4 && index !== 10); // 9, 15 are empty lines
+    return { dates, bookings: filteredRows };
 }
 //# sourceMappingURL=google-api.js.map

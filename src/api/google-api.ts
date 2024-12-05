@@ -31,16 +31,29 @@ export async function getSheetNames(): Promise<string[]> {
     return response.data.sheets?.map(sheet => sheet.properties?.title || '') ?? [];
 }
 
-export async function getBookingSpreadsheet(sheetName: string): Promise<string[][]> {
+export async function getBookingSpreadsheet(sheetName: string): Promise<Bookings> {
     try {
         const response = await sheets.spreadsheets.values.get({
             auth,
             spreadsheetId: config.spreadsheetId,
-            range: `'${sheetName}'!C3:Z15`,
+            range: `'${sheetName}'!C3:Z17`,
         });
 
-        return response.data.values as string[][];
+        return filterRows(response.data.values as string[][]);
     } catch (error) {
-        return [];
+        return { dates: [], bookings: [] };
     }
+}
+
+
+interface Bookings {
+    dates: string[];
+    bookings: string[][];
+}
+
+function filterRows(rows: string[][]): Bookings {
+    const [dates, _weekDays, ...bookings] = rows;
+    const filteredRows = bookings.filter((_, index) => index !== 4 && index !== 10); // 9, 15 are empty lines
+    
+    return { dates, bookings: filteredRows };
 }

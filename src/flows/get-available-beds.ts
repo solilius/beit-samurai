@@ -21,7 +21,7 @@ export async function getAvailableBeds(week: string): Promise<WeeklyBooking> {
 async function getWeeklyBookings(week: string): Promise<WeeklyBooking> {
     const sheetName = parseToSheetName(week);
 
-    const [dates, _weekDays, ...bookings] = await getBookingSpreadsheet(sheetName);
+    const { dates, bookings } = await getBookingSpreadsheet(sheetName);
 
     if (!dates) return getEmptyWeekBooking(week);
     

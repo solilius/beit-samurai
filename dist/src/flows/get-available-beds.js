@@ -34,7 +34,7 @@ function getWeeklyBookings(week) {
     return __awaiter(this, void 0, void 0, function* () {
         var _a;
         const sheetName = parseToSheetName(week);
-        const [dates, _weekDays, ...bookings] = yield (0, google_api_1.getBookingSpreadsheet)(sheetName);
+        const { dates, bookings } = yield (0, google_api_1.getBookingSpreadsheet)(sheetName);
         if (!dates)
             return getEmptyWeekBooking(week);
         const weeklyBookings = {};
@@ -59,7 +59,7 @@ function parseToSheetName(week) {
 }
 ;
 function formatDate(dateString, year) {
-    return `${dateString.format('DD/MM')}/${year}`;
+    return `${dateString.format('DD/MM/YY')}/${year}`;
 }
 function calcAvailableBeds(booked) {
     return Math.max(0, config_1.config.maxBedCapacity - booked);
