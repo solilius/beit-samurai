@@ -59,7 +59,7 @@ function parseToSheetName(week) {
 }
 ;
 function formatDate(dateString, year) {
-    return `${dateString.format('DD/MM/YY')}/${year}`;
+    return `${dateString.format('DD/MM')}/${year}`;
 }
 function calcAvailableBeds(booked) {
     return Math.max(0, config_1.config.maxBedCapacity - booked);
